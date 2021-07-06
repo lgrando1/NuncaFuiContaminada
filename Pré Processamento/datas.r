@@ -8,10 +8,15 @@ out_uti$DIAS_SINTOMAS <- as.numeric(as.Date(as.character(out_uti$DT_EVOLUCA), fo
 out_uti$DIAS_SINTOMAS_A_INTERNAR <- as.numeric(as.Date(as.character(out_uti$DT_INTERNA), format="%d/%m/%Y")- as.Date(as.character(out_uti$DT_SIN_PRI), format="%d/%m/%Y"))
 
 #Remove as datas impossiveis
+#necessario verificar se considera igual ou maior que zero
+out_evolucao <- out_evolucao[out_evolucao$DIAS_INTERNACAO >= 0,]
+out_evolucao <- out_evolucao[out_evolucao$DIAS_SINTOMAS_A_INTERNAR >= 0,]
+out_evolucao <- out_evolucao[out_evolucao$DIAS_SINTOMAS >= 0,]
 
-out_evolucao <- out_evolucao[out_evolucao$DIAS_INTERNACAO > 0,]
-
+#necessario verificar se considera igual ou maior que zero
 out_uti <- out_uti[out_uti$DIAS_INTERNACAO > 0,]
+out_uti <- out_uti[out_uti$DIAS_SINTOMAS_A_INTERNAR > 0,]
+out_uti <- out_uti[out_uti$DIAS_SINTOMAS > 0,]
 
 #Remove a coluna das datas
 
@@ -28,3 +33,11 @@ out_uti$DT_INTERNA <- NULL
 write.csv(out_evolucao, 'out_evolucao_datas.csv')
 
 write.csv(out_uti, 'out_uti_datas.csv')
+
+
+# Avaliar estatisticas dados 
+summary(out_uti)
+
+# verificar se tem dados faltantes 
+sapply(out_uti, function(x) sum(is.na(x)))
+
